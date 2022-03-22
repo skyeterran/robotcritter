@@ -14,15 +14,11 @@ try {
 
 const port = 8000;
 
-const handler = async (request: Request): Promise<Response> => {
-  let body = "Your user-agent is:\n\n";
-  body += request.headers.get("user-agent") || "Unknown";
-
-  return new Response(new TextEncoder().encode(await generateHTML()), { status: 200 });
-};
-
 console.log(`HTTP webserver running. Access it at: http://localhost:${port}/`);
-await serve(handler, { port });
+
+serve(async (_req) => {
+    return new Response(new TextEncoder().encode(await generateHTML()), { status: 200 });
+});
 
 async function generateHTML(): Promise<string> {
     var startTime = performance.now();
