@@ -1,0 +1,18 @@
+body {
+    font-family: 'Arial';
+    background-color: rgb(13, 12, 22);
+    color: rgb(255, 116, 202);
+    margin: 0;
+}
+
+div {
+    border: 1px solid rgb(255, 116, 202);
+    background-color: rgba(88, 76, 105, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+}
+
+h1, h2, p {
+    margin: 0;
+}
