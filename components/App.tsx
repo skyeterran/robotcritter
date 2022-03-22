@@ -2,7 +2,7 @@ import { React } from "../dep.ts";
 import ListValue from "./ListItem.tsx";
 import ListItem from "./ListItem.tsx";
 
-let items = [
+const items = [
     {
         name: "Goblin",
         description: "A strange little creature"
@@ -15,7 +15,7 @@ let items = [
         name: "Kobold",
         description: "Simps HARD for dragons"
     },
-]
+];
 
 export default function App() {
     return (
@@ -24,7 +24,7 @@ export default function App() {
             <h2>No JavaScript, no cookies, just vibes.</h2>
             <ul>
                 {items.map((item) => (
-                    <ListItem name={item.name} description={item.description} />
+                    <ListItem key={item.name} name={item.name} description={item.description} />
                 ))}
             </ul>
         </div>
