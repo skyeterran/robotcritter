@@ -26,7 +26,7 @@ await serve(handler, { port });
 
 async function generateHTML(): Promise<string> {
     var startTime = performance.now();
-    const innerHTML = ReactDOMServer.renderToString(<App />);
+    const innerHTML = ReactDOMServer.renderToStaticMarkup(<App />);
     const style = await Deno.readTextFile("./resources/styles/app.css");
     var endTime = performance.now();
     //console.log(`Static HTML content generated in ${endTime - startTime}ms.`);

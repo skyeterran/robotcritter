@@ -1,6 +1,6 @@
 import { React } from "../dep.ts";
 
-interface ListValue {
+export interface ListValue {
     name: string;
     description: string;
 }
@@ -12,4 +12,4 @@ export default function ListItem(props: ListValue) {
             <p>{props.description}</p>
         </div>
     );
-};
+}
