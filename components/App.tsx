@@ -20,7 +20,7 @@ const items = [
 export default function App() {
     return (
         <div>
-            <h1>Skye's Cool Website 🥴💦</h1>
+            <h1>RobotCritter 🥴💦</h1>
             <h2>No JavaScript, no cookies, just vibes.</h2>
             <ul>
                 {items.map((item) => (
