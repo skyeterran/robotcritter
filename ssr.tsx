@@ -1,26 +1,18 @@
 import { React, ReactDOMServer } from "./dep.ts";
-import App from "./components/App.tsx";
 import { serve } from "https://deno.land/std@0.130.0/http/server.ts";
 import * as path from "https://deno.land/std@0.130.0/path/mod.ts";
 import { readableStreamFromReader } from "https://deno.land/std@0.130.0/streams/mod.ts";
 
-/*
-// Write the output HTML to disk
-try {
-    await Deno.writeTextFile("./build/index.html", stringDOM);
-    console.log("Successfully rendered HTML to /build");
-} catch (error) {
-    console.log(error);
-}
-*/
-
-const routes: { [key: string]: JSX.Element } = {
-    "/": <App />
-};
+import App from "./components/App.tsx";
+import Gallery from "./components/Gallery.tsx";
 
 const port = 8000;
-
 console.log(`HTTP webserver running. Access it at: http://localhost:${port}/`);
+
+const routes: { [key: string]: JSX.Element } = {
+    "/": <App />,
+    "/gallery": <Gallery />
+};
 
 serve(async (request) => {
     const url = new URL(request.url);
