@@ -1,16 +1,27 @@
 import { React } from "../dep.ts";
 
-const pics = [
-    { url: "assets/gallery/[sleepygills]_Tyler_FN1hBtAVgAEkQTt.jpg" },
-    { url: "assets/gallery/20220316_161908460_iOS.png" }
-];
+export interface Pic {
+    paths: string[];
+}
 
-export default function Gallery() {
+export default function Gallery(props: Pic) {
+    console.log("Rendering gallery");
     return (
         <div>
-            {pics.map((pic) => (
-                <img src={pic.url} />
+            {props.paths.map((pic) => (
+                <img key={pic} src={pic} className="gallery-pic" />
             ))}
         </div>
     );
 };
+
+async function listDir(dirPath: string): Promise<string[]> {
+    let files: string[] = [];
+    for await (let fileOrFolder of Deno.readDir(dirPath)) {
+        if (fileOrFolder.isFile) {
+            files.push(`${dirPath}/${fileOrFolder.name}`);
+        }
+    }
+    console.log(files);
+    return files;
+}

@@ -1,6 +1,5 @@
 import { React, ReactDOMServer } from "./dep.ts";
 import { serve } from "https://deno.land/std@0.130.0/http/server.ts";
-import * as path from "https://deno.land/std@0.130.0/path/mod.ts";
 import { readableStreamFromReader } from "https://deno.land/std@0.130.0/streams/mod.ts";
 
 import App from "./components/App.tsx";
@@ -9,15 +8,10 @@ import Gallery from "./components/Gallery.tsx";
 const port = 8000;
 console.log(`HTTP webserver running. Access it at: http://localhost:${port}/`);
 
-const routes: { [key: string]: JSX.Element } = {
-    "/": <App />,
-    "/gallery": <Gallery />
-};
-
 serve(async (request) => {
     const url = new URL(request.url);
     const filepath = decodeURIComponent(url.pathname);
-    console.log(filepath);
+    //console.log(filepath);
     
     // Handle asset requests
     // TODO: Come up with a better routing solution than this; this hardcodes assets/ as the static resource root
@@ -39,11 +33,18 @@ serve(async (request) => {
         // Build and send the response
         return new Response(readableStream);
     } else {
-        if (routes[filepath] !== undefined) {
-            return new Response(new TextEncoder().encode(await generateHTML(routes[filepath])), { status: 200 });
-        } else {
-            // If that's not a valid route, return a 404 error
-            return new Response("404 Not Found", { status: 404 });
+        // Generate HTML via the current route's corresponding React element
+        switch (filepath) {
+            case "/": {
+                return new Response(new TextEncoder().encode(await generateHTML(<App />)), { status: 200 });
+            }
+            case "/gallery": {
+                const pics = await listDir("assets/gallery/");
+                return new Response(new TextEncoder().encode(await generateHTML(<Gallery paths={pics}/>)), { status: 200 });
+            }
+            default:
+                // If that's not a valid route, return a 404 error
+                return new Response("404 Not Found", { status: 404 });
         }
     }
 });
@@ -53,7 +54,7 @@ async function generateHTML(element: JSX.Element): Promise<string> {
     const innerHTML = ReactDOMServer.renderToStaticMarkup(element);
     const style = await Deno.readTextFile("./resources/styles/app.css");
     var endTime = performance.now();
-    //console.log(`Static HTML content generated in ${endTime - startTime}ms.`);
+    console.log(`Static HTML content generated in ${endTime - startTime}ms.`);
     const buildMsg = `This page was generated in ${endTime - startTime} milliseconds.`;
 
     const html = `
@@ -76,4 +77,15 @@ ${style}
 </html>`;
 
     return html;
+}
+
+async function listDir(dirPath: string): Promise<string[]> {
+    let files: string[] = [];
+    for await (let fileOrFolder of Deno.readDir(dirPath)) {
+        if (fileOrFolder.isFile) {
+            files.push(`${dirPath}/${fileOrFolder.name}`);
+        }
+    }
+    console.log(files);
+    return files;
 }
