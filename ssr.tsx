@@ -40,7 +40,25 @@ serve(async (request) => {
             }
             case "/gallery": {
                 const pics = await listDir("assets/gallery/");
-                return new Response(new TextEncoder().encode(await generateHTML(<Gallery paths={pics}/>)), { status: 200 });
+                let html = "";
+
+                // Check if cached HTML exists for this page
+                let file;
+                try {
+                    file = await Deno.open(`./cache${filepath}.html`, { read: true });
+                    const stat = await file.stat();
+                } catch {
+                    console.log(`No cache file exists for ${filepath}. Generating...`)
+                    //file = await Deno.open(`./cache${filepath}.json`, { create: true });
+                }
+                // If no cached HTML exists, generate it now
+                html = await generateHTML(<Gallery paths={pics}/>);
+                
+                // Cache that HTML for later retrieval
+                await Deno.writeTextFile(`./cache${filepath}.html`, html);
+
+                // Return the generated HTML
+                return new Response(new TextEncoder().encode(html), { status: 200 });
             }
             default:
                 // If that's not a valid route, return a 404 error
@@ -86,6 +104,9 @@ async function listDir(dirPath: string): Promise<string[]> {
             files.push(`${dirPath}/${fileOrFolder.name}`);
         }
     }
-    console.log(files);
     return files;
+}
+
+async function writeJson(filePath: string, o: any) {
+    await Deno.writeTextFile(filePath, JSON.stringify(o));
 }

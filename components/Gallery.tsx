@@ -14,14 +14,3 @@ export default function Gallery(props: Pic) {
         </div>
     );
 };
-
-async function listDir(dirPath: string): Promise<string[]> {
-    let files: string[] = [];
-    for await (let fileOrFolder of Deno.readDir(dirPath)) {
-        if (fileOrFolder.isFile) {
-            files.push(`${dirPath}/${fileOrFolder.name}`);
-        }
-    }
-    console.log(files);
-    return files;
-}
