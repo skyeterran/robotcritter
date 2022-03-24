@@ -4,11 +4,11 @@ export interface Pic {
     paths: string[];
 }
 
-export default function Gallery(props: Pic) {
+export default function Gallery(props: string[]) {
     console.log("Rendering gallery");
     return (
         <div>
-            {props.paths.map((pic) => (
+            {props.map((pic) => (
                 <img key={pic} src={pic} className="gallery-pic" />
             ))}
         </div>
