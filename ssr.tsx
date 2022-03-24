@@ -45,7 +45,7 @@ serve(async (request) => {
         let props: string[] = [];
 
         // Generate HTML via the current route's corresponding React element
-        let startTime = performance.now();
+        const startTime = performance.now();
         switch (filepath) {
             case "/": {
                 break;
@@ -80,17 +80,17 @@ serve(async (request) => {
         }
 
         // Return the generated HTML
-        let endTime = performance.now();
+        const endTime = performance.now();
         console.log(`Delivered content in ${endTime - startTime}ms.`);
         return new Response(new TextEncoder().encode(html), { status: 200 });
     }
 });
 
 async function generateHTML(element: JSX.Element): Promise<string> {
-    let startTime = performance.now();
+    const startTime = performance.now();
     const innerHTML = ReactDOMServer.renderToStaticMarkup(element);
     const style = await Deno.readTextFile("./resources/styles/app.css");
-    let endTime = performance.now();
+    const endTime = performance.now();
     console.log(`Static HTML content generated in ${Math.round((endTime - startTime) * 100) / 100}ms.`);
     const buildMsg = `This page was generated in ${Math.round((endTime - startTime) * 100) / 100} milliseconds.`;
 

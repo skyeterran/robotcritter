@@ -1,12 +1,12 @@
 body {
     font-family: 'Arial';
     background-color: rgb(13, 12, 22);
-    color: rgb(255, 116, 202);
+    color: rgb(116, 255, 139);
     margin: 0;
 }
 
 div {
-    border: 1px solid rgb(255, 116, 202);
+    border: 1px solid rgb(116, 255, 139);
     background-color: rgba(88, 76, 105, 0.1);
     border-radius: 10px;
     padding: 10px;

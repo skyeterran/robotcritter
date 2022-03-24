@@ -1,4 +1,5 @@
 import { React } from "../dep.ts";
+import Header from "./Header.tsx";
 import ListValue from "./ListItem.tsx";
 import ListItem from "./ListItem.tsx";
 
@@ -20,8 +21,7 @@ const items = [
 export default function App() {
     return (
         <div>
-            <h1>RobotCritter 🥴💦</h1>
-            <h2>No JavaScript, no cookies, just vibes.</h2>
+            <Header />
             <ul>
                 {items.map((item) => (
                     <ListItem key={item.name} name={item.name} description={item.description} />
