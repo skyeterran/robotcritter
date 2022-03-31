@@ -2,6 +2,8 @@ import { React, ReactDOMServer, listDir } from "./dep.ts";
 import { serve } from "https://deno.land/std@0.130.0/http/server.ts";
 import { readableStreamFromReader } from "https://deno.land/std@0.130.0/streams/mod.ts"
 import { flushCache, writeCacheFile, makeHash } from "./cache.ts";
+import { getThumbnail } from "./thumbnail.ts";
+import { Pic } from "./components/Gallery.tsx";
 
 import App from "./components/App.tsx";
 import Gallery from "./components/Gallery.tsx";
@@ -42,7 +44,7 @@ serve(async (request) => {
         return new Response(readableStream);
     } else {
         // We need to get the apropos props
-        let props: string[] = [];
+        let props: Pic[] = [];
 
         // Generate HTML via the current route's corresponding React element
         const startTime = performance.now();
@@ -51,7 +53,18 @@ serve(async (request) => {
                 break;
             }
             case "/gallery": {
-                props = await listDir("assets/gallery/");
+                // Get a list of all the files in the gallery
+                const galleryPics = await listDir("assets/gallery");
+                
+                // Get the thumbnail paths for those images and add them to props
+                for (const i in galleryPics) {
+                    const thisPic: Pic = {
+                        fullsize: galleryPics[i],
+                        thumbnail: await getThumbnail(galleryPics[i])
+                    }
+                    props.push(thisPic);
+                }
+
                 break;
             }
             default:

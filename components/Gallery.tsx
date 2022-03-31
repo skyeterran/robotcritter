@@ -2,17 +2,20 @@ import { React } from "../dep.ts";
 import Header from "./Header.tsx";
 
 export interface Pic {
-    paths: string[];
+    fullsize: string;
+    thumbnail: string;
 }
 
-export default function Gallery(props: string[]) {
+export default function Gallery(props: Pic[]) {
     console.log("Rendering gallery");
     return (
         <div>
             <Header />
-            {props.map((pic) => (
-                <img key={pic} src={pic} className="gallery-pic" />
-            ))}
+            <div className="gallery-grid">
+                {props.map((pic) => (
+                    <a href={pic.fullsize}><img key={pic.fullsize} src={pic.thumbnail} className="gallery-pic" /></a>
+                ))}
+            </div>
         </div>
     );
 };
