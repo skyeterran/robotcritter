@@ -1,7 +1,7 @@
 import { React, ReactDOMServer, listDir } from "./dep.ts";
 import { serve } from "https://deno.land/std@0.130.0/http/server.ts";
 import { readableStreamFromReader } from "https://deno.land/std@0.130.0/streams/mod.ts"
-import { flushCache, writeCacheFile, makeHash } from "./cache.ts";
+import { flushCache, prepareAssets, writeCacheFile, makeHash } from "./cache.ts";
 import { getThumbnail } from "./thumbnail.ts";
 import { Pic } from "./components/Gallery.tsx";
 
@@ -9,7 +9,9 @@ import App from "./components/App.tsx";
 import Gallery from "./components/Gallery.tsx";
 
 // Before we do anything else, flush the damn cache
+// Also, prepare assets as needed
 await flushCache();
+await prepareAssets("assets/gallery");
 
 const port = 8000;
 console.log(`HTTP webserver running. Access it at: http://localhost:${port}/`);
@@ -30,7 +32,6 @@ serve(async (request) => {
         let file;
         try {
             file = await Deno.open("." + filepath, { read: true });
-            const stat = await file.stat();
         } catch {
             // If the file cannot be opened, return a "404 Not Found" response
             return new Response("404 Not Found", { status: 404 });

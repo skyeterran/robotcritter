@@ -7,13 +7,12 @@ export interface Pic {
 }
 
 export default function Gallery(props: Pic[]) {
-    console.log("Rendering gallery");
     return (
         <div>
             <Header />
             <div className="gallery-grid">
                 {props.map((pic) => (
-                    <a href={pic.fullsize}><img key={pic.fullsize} src={pic.thumbnail} className="gallery-pic" /></a>
+                    <a key={pic.fullsize} href={pic.fullsize}><img src={pic.thumbnail} className="gallery-pic" /></a>
                 ))}
             </div>
         </div>

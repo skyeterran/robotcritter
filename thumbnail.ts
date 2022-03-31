@@ -1,4 +1,4 @@
-import {Image} from 'https://deno.land/x/imagescript@v1.2.12/mod.ts';
+import { Image } from 'https://deno.land/x/imagescript@v1.2.12/mod.ts';
 import { resize } from "https://deno.land/x/deno_image@0.0.4/mod.ts";
 
 async function getThumbnail(inPath: string): Promise<string> {
@@ -8,7 +8,7 @@ async function getThumbnail(inPath: string): Promise<string> {
     try {
         //
         const thumbFile = await Deno.open(thumbPath, { read: true });
-        const stat = await thumbFile.stat();
+        thumbFile.close();
     } catch {
         await generateThumbnail(inPath, 512);
         console.log(`Generated thumbnail for ${inPath}`);
@@ -30,16 +30,13 @@ async function generateThumbnail(inPath: string, resolution: number) {
     
     let shortest_side = image.width;
     let x_offset = 0;
-    let y_offset = 0;
     if (image.width >= image.height) {
         shortest_side = image.height;
         x_offset = Math.floor((image.width - image.height) / 2);
-    } else {
-        y_offset = Math.floor((image.height - image.width) / 2);
     }
     
     // Crop the image into a square
-    image.crop(x_offset, y_offset, shortest_side, shortest_side);
+    image.crop(x_offset, 0, shortest_side, shortest_side);
     const cropped_binary = await image.encodeJPEG(100);
     
     // Resize the square image

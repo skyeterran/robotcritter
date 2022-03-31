@@ -1,11 +1,23 @@
 import { listDir } from "./dep.ts";
 import { createHash } from "https://deno.land/std@0.77.0/hash/mod.ts";
+import { getThumbnail } from "./thumbnail.ts";
 
 async function flushCache() {
     const cacheFiles = await listDir("./cache");
     console.log("Flushing cache...");
     for (let i in cacheFiles) {
         await Deno.remove(cacheFiles[i]);
+    }
+}
+
+// Prepares asset related stuff
+async function prepareAssets(directory: string) {
+    console.log(`Preparing assets in ${directory}...`);
+    // TODO - use regex / file extensions to determine what operations to perform per-asset
+    // Generate thumbnails for every image in the directory
+    const assets = await listDir(directory);
+    for (const i in assets) {
+        await getThumbnail(assets[i]);
     }
 }
 
@@ -25,4 +37,4 @@ function bufferToHex(buffer: ArrayBuffer): string {
         .join ("");
 }
 
-export { flushCache, writeCacheFile, makeHash };
+export { flushCache, prepareAssets, writeCacheFile, makeHash };
